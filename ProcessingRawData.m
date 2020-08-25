@@ -227,7 +227,9 @@ end
 
 %% Loading SARS-CoV epitope data downloaded from COVIDep
 
-t_table3 = readtable('Raw Data/COVIDepALLTcell.csv');
+t_table3 = readtable('Raw Data/AllSARSTepitopes.csv');
+% t_table3 = readtable('Raw Data/COVIDepALLTcell.csv');
+
 
 for kk = 1:size(t_table3,1)
     
@@ -262,7 +264,16 @@ for kk = 1:size(t_table_rf,1)
     for mm = 1:size(t_table3,1)
         
         [aa,bb,cc] = swalign(t_table_rf.Peptide{kk}{:},t_table3.Epitope{mm});
-        perc_overlap = sum(bb(2,:)=='|')/length(t_table3.Epitope{mm})*100;
+        
+        if isempty(t_table_rf.HLAAlleleInformation__Separated_{kk})
+        
+            perc_overlap = sum(bb(2,:)=='|')/length(t_table3.Epitope{mm})*100; %allows fragmets of sars2 to match sars epitope
+            
+        else
+            
+            perc_overlap = sum(bb(2,:)=='|')*2/(length(t_table_rf.Peptide{kk}{:})+length(t_table3.Epitope{mm}))*100; %exact match only (of same length)
+            
+        end
         
         if perc_overlap==100 %when 100% overlap
             
@@ -273,7 +284,7 @@ for kk = 1:size(t_table_rf,1)
                     t_table_mapping.("IEDB ID"){nn} = t_table3.IEDB(mm);
                     t_table_mapping.Protein{nn} = t_table_rf.Protein{kk};
                     t_table_mapping.("SARS Epitope"){nn} = t_table3.Epitope{mm};
-                    t_table_mapping.("SARS T Cell Assay"){nn} = t_table3.TCellAssay{mm};
+%                     t_table_mapping.("SARS T Cell Assay"){nn} = t_table3.TCellAssay{mm};
                     t_table_mapping.("SARS HLA Class"){nn} = t_table3.MHCAlleleClass{mm};
                     t_table_mapping.("SARS HLA Alleles"){nn} = t_table3.MHCAlleleNames{mm};
                     t_table_mapping.("SARS Number of HLAs")(nn) = t_table3.NumMHCs(mm);
@@ -304,7 +315,7 @@ for kk = 1:size(t_table_rf,1)
                     t_table_mapping.("IEDB ID"){nn} = t_table3.IEDB(mm);
                     t_table_mapping.Protein{nn} = t_table_rf.Protein{kk};
                     t_table_mapping.("SARS Epitope"){nn} = t_table3.Epitope{mm};
-                    t_table_mapping.("SARS T Cell Assay"){nn} = t_table3.TCellAssay{mm};
+%                     t_table_mapping.("SARS T Cell Assay"){nn} = t_table3.TCellAssay{mm};
                     t_table_mapping.("SARS HLA Class"){nn} = t_table3.MHCAlleleClass{mm};
                     t_table_mapping.("SARS HLA Alleles"){nn} = t_table3.MHCAlleleNames{mm};
                     t_table_mapping.("SARS Number of HLAs")(nn) = t_table3.NumMHCs(mm);
@@ -363,7 +374,7 @@ for kk = 1:size(t_table_rf,1)
         
     end
     
-    kk    
+    [kk  nn]
 end
 
 
@@ -441,7 +452,7 @@ for kk = 1:size(t_table_mapping,1)
     
 end
 
-% writetable(t_table_mapping,'Processed Data/SARS-CoV-2-T-cell-epitopes-Final-Mapped-SARS-WithHLAInfo_v2.xlsx')
+writetable(t_table_mapping,'Processed Data/SARS-CoV-2-T-cell-epitopes-Final-Mapped-SARS-WithHLAInfo_v2.xlsx')
 
 %% Separating peptides excel file and extra alleles exact epitopes
 
@@ -450,11 +461,28 @@ indices_sars2_no_hla_info = find(strcmp(t_table_mapping.("SARS2 HLA Alleles"),'-
 t_table_immunogenic_peptides_mapped = t_table_mapping(indices_sars2_no_hla_info,:);
 
 t_table_immunogenic_peptides_mapped.Properties.VariableNames{8} = 'SARS2 Peptide';
+
+unique_sars_epitopes = unique(t_table_immunogenic_peptides_mapped.("SARS Epitope"));
+unique_sars2_peptides = unique(t_table_immunogenic_peptides_mapped.("SARS2 Peptide"));
+
+no_unique_sars_epitopes = length(unique_sars_epitopes)
+no_unique_sars2_peptides = length(unique_sars2_peptides)
+
 writetable(t_table_immunogenic_peptides_mapped,'Processed Data/SARS-CoV-2-T-cell-peptides-Mapped-SARS.xlsx')
 
+
+%%
 indices_sars2_exact_epitopes = setdiff(1:size(t_table_mapping,1),indices_sars2_no_hla_info);
 t_table_exact_epitopes_mapped = t_table_mapping(indices_sars2_exact_epitopes,:);
 
 t_table_exact_epitopes_mapped.Properties.VariableNames{8} = 'SARS2 Epitope';
+
+indices_same_sars_sars2 = find(strcmp(t_table_exact_epitopes_mapped.("SARS Epitope"),t_table_exact_epitopes_mapped.("SARS2 Epitope")));
+indices_dashes = find(strcmp(t_table_exact_epitopes_mapped.("SARS Epitope"),'-'))
+% indices_notDashes = setdiff(1:size(t_table_exact_epitopes_mapped,1),indices_dashes)
+% t_table_exact_epitopes_mapped2 = t_table_exact_epitopes_mapped([indices_dashes; indices_same_sars_sars2],:)
+
+
 writetable(t_table_exact_epitopes_mapped,'Processed Data/SARS-CoV-2-T-cell-epitopes-Mapped-SARS.xlsx')
+
 
