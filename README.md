@@ -33,7 +33,7 @@ A PC with MATLAB (preferrably v2019b or later) installed on it with the followin
 
 
 ## Troubleshooting
-For any questions or comments, please email at eeaaquadeer@ust.hk or sfahmed@connect.ust.hk.
+For any questions or comments, please email at eeaaquadeer(at)ust.hk or sfahmed(at)connect.ust.hk.
 
 
 ## Citation
