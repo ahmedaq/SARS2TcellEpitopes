@@ -29,7 +29,7 @@ A PC with MATLAB (preferrably v2019b or later) installed on it with the followin
 1.  Download the repository
 2.  Open MATLAB
 3.  Change directory to the downloaded repository 
-4.  Run the script ProcessingRawData.m 
+4.  Run the script ProcessingRawData.m. This script takes raw table compiled from the literature as input and outputs processed tables with detailed characteristics of epitopes. 
 
 
 ## Troubleshooting
