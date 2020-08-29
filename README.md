@@ -21,7 +21,7 @@ Ahmed A. Quadeer, Syed Faraz Ahmed, and Matthew R. McKay
 
 ## Requirements
 A PC with MATLAB (preferrably v2019b or later) installed on it with the following additional toolboxes:
-    
+
     1. Bioinformatics Toolbox
     2. Statistics and Machine Learning Toolbox
 
@@ -33,6 +33,7 @@ A PC with MATLAB (preferrably v2019b or later) installed on it with the followin
 4.  Run the script ProcessingRawData.m. 
     
     Inputs:
+    
     1. "SARS-CoV-2-T-cell-epitopes.xlsx": This table will be periodically updated as new experimental studies reporting SARS-CoV-2 T cell epitopes in COVID-19 convalescent patients are published. 
     2. "AllSARSTepitopes.csv": This table includes details of all SARS-CoV epitopes downloaded from the VIPR database.
     
