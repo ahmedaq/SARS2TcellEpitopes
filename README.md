@@ -21,8 +21,9 @@ Ahmed A. Quadeer, Syed Faraz Ahmed, and Matthew R. McKay
 
 ## Requirements
 A PC with MATLAB (preferrably v2019b or later) installed on it with the following additional toolboxes:
-    * Bioinformatics Toolbox
-    * Statistics and Machine Learning Toolbox
+    
+    1. Bioinformatics Toolbox
+    2. Statistics and Machine Learning Toolbox
 
 
 ## Usage
